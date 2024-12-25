@@ -56,6 +56,18 @@
 - MetaMask または互換性のある Web3 ウォレット
 - Pinata の API 認証情報
 
+### Pinata の設定
+
+1. Pinata にアクセスし、アカウントを作成
+2. ログイン後、画面右上のプロフィールアイコンから「API Keys」を選択
+3. 「New API Key」をクリック
+4. 任意の名前を入力し、以下の権限を付与：
+
+- pinFileToIPFS
+- pinJSONToIPFS
+
+5. 生成された JWT（Bearer xxx...の形式）をコピー
+
 ### 環境変数の設定
 
 frontend ディレクトリに`.env`ファイルを作成し、以下を設定：
