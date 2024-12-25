@@ -1,66 +1,118 @@
-## Foundry
+# Soulbound Token (SBT) プロジェクト
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+このプロジェクトは、Solidity スマートコントラクトとリアクトベースのフロントエンドインターフェースを使用した Soulbound Token (SBT) システムを実装しています。SBT は、特定のウォレットアドレスに永続的に紐づけられた、譲渡不可能な NFT であり、実績、資格、メンバーシップなどを表現することができます。
 
-Foundry consists of:
+## プロジェクト構成
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+```
+├── src/
+│   └── SoulboundToken.sol       # メインのSBTスマートコントラクト
+├── script/
+│   └── DeploySoulboundToken.s.sol # デプロイメントスクリプト
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   │   └── SBTMinter.tsx    # SBTミント用インターフェース
+    │   └── utils/
+    │       ├── contractUtils.ts  # コントラクト操作ユーティリティ
+    │       ├── pinata-client.ts  # Pinata IPFSクライアント
+    │       ├── pinata-utils.ts   # IPFSアップロード用ユーティリティ
+    │       └── viem-client.ts    # Ethereumクライアント設定
 ```
 
-### Test
+## 技術スタック
 
-```shell
-$ forge test
+- **スマートコントラクト**: Solidity 0.8.20
+- **開発フレームワーク**: Foundry
+- **フロントエンド**: React + TypeScript + Vite
+- **スタイリング**: TailwindCSS
+- **ブロックチェーン連携**: viem + wagmi
+- **ストレージ**: IPFS (Pinata)
+- **ネットワーク**: Sepolia テストネット
+
+## 主な機能
+
+- 譲渡不可能な ERC721 トークンの実装
+- IPFS を利用したメタデータストレージ（Pinata 経由）
+- SBT ミント用 Web インターフェース
+- ウォレット接続機能
+- カスタムメタデータと属性の管理
+- 画像アップロード機能
+
+## スマートコントラクトの詳細
+
+`SoulboundToken`コントラクトは、OpenZeppelin の ERC721 実装を拡張し、以下の機能を追加しています：
+
+- ミント後のトークン譲渡防止機能
+- メタデータ用の URI 保存機能
+- オーナーのみがミント可能な権限管理
+
+## 開始方法
+
+### 必要条件
+
+- Node.js（最新の LTS バージョン）
+- Foundry
+- MetaMask または互換性のある Web3 ウォレット
+- Pinata の API 認証情報
+
+### 環境変数の設定
+
+frontend ディレクトリに`.env`ファイルを作成し、以下を設定：
+
+```
+VITE_PINATA_JWT=your_pinata_jwt_token
 ```
 
-### Format
+コントラクトデプロイ用に、ルートディレクトリに`.env`ファイルを作成し、以下を設定：
 
-```shell
-$ forge fmt
+```
+PRIVATE_KEY=your_private_key
 ```
 
-### Gas Snapshots
+### インストール手順
 
-```shell
-$ forge snapshot
+1. スマートコントラクトの依存関係をインストール：
+
+```bash
+forge install
 ```
 
-### Anvil
+2. フロントエンドの依存関係をインストール：
 
-```shell
-$ anvil
+```bash
+cd frontend
+npm install
 ```
 
-### Deploy
+### 開発環境の起動
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+1. フロントエンド開発サーバーの起動：
+
+```bash
+cd frontend
+npm run dev
 ```
 
-### Cast
+2. コントラクトのデプロイ（Sepolia テストネット）：
 
-```shell
-$ cast <subcommand>
+```bash
+forge script script/DeploySoulboundToken.s.sol --rpc-url sepolia --broadcast
 ```
 
-### Help
+## 使用方法
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+1. Web3 ウォレットを接続
+2. SBT 用の画像をアップロード
+3. トークンのメタデータを入力：
+   - 名前
+   - 説明
+   - カスタム属性
+4. 「Mint SBT」をクリックして Soulbound トークンを作成
+
+## セキュリティ考慮事項
+
+- コントラクトに譲渡制限を実装
+- トークンのミントはコントラクトオーナーのみが可能
+- メタデータは IPFS 上に永続的に保存
+- フロントエンドにウォレット接続の検証機能を実装
